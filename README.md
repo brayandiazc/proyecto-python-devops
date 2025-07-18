@@ -170,6 +170,7 @@ graph TD
 ## Autor
 
 - [Brayan Diaz C](https://github.com/brayandiazc)
+- [Jplazadelosreyes](https://github.com/Jplazadelosreyes)
 
 ## Licencia
 
@@ -177,4 +178,4 @@ Este proyecto está licenciado bajo la Licencia MIT - consulta el archivo [LICEN
 
 ---
 
-⌨️ con ❤️ por [Brayan Diaz C](https://github.com/brayandiazc) 😊
+⌨️ con ❤️ por [Brayan Diaz C](https://github.com/brayandiazc) y [Jplazadelosreyes](https://github.com/Jplazadelosreyes)
