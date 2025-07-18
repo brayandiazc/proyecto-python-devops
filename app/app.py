@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "Bienvenido al proyecto DevOps educativo con cambios"
+    return "Bienvenido al proyecto DevOps educativo con cambios v2"
 
 @app.route('/health')
 def health():
