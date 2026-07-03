@@ -3,7 +3,7 @@
 Ejemplo educativo de un flujo CI/CD de punta a punta: aplicación **Python + Flask** contenerizada con **Docker**, infraestructura gestionada con **Terraform** y despliegue automático a **AWS EC2** mediante **GitHub Actions**.
 
 ![Build](https://img.shields.io/badge/build-passing-brightgreen)
-![Python](https://img.shields.io/badge/python-3.11-blue)
+![Python](https://img.shields.io/badge/python-3.14-blue)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ## Tabla de Contenidos
@@ -56,7 +56,7 @@ graph TD
 
 Antes de comenzar, asegúrate de tener instalado:
 
-- **Python**: v3.11 o superior
+- **Python**: v3.14 o superior
 - **Docker** y **Docker Compose**
 - **Terraform**: v1.x o superior (para la infraestructura)
 - **Cuenta de AWS** y un par de claves SSH (para el despliegue)
@@ -125,7 +125,7 @@ Resumen de cómo está construido el sistema y del flujo CI/CD en
 
 | Capa               | Herramienta                    |
 | ------------------ | ------------------------------ |
-| Lenguaje principal | Python 3.11                    |
+| Lenguaje principal | Python 3.14                    |
 | Framework web      | Flask                          |
 | Testing            | Pytest                         |
 | Contenedores       | Docker, Docker Compose         |

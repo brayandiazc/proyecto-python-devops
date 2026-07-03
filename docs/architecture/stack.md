@@ -7,7 +7,7 @@
 
 | Categoría | Tecnología | Versión | Por qué                                             |
 | --------- | ---------- | ------- | --------------------------------------------------- |
-| Runtime   | Python     | 3.11    | Versión estable y ampliamente soportada.            |
+| Runtime   | Python     | 3.14    | Versión estable y ampliamente soportada.            |
 | Framework | Flask      | latest  | Micro-framework mínimo, ideal para una API pequeña. |
 
 ## DevOps & Herramientas
@@ -38,6 +38,6 @@
 
 ## Versiones mínimas soportadas
 
-- Python >= 3.11
+- Python >= 3.14
 - Docker >= 20.x y Docker Compose
 - Terraform >= 1.x

@@ -39,7 +39,7 @@ graph TD
 
 | Componente          | Responsabilidad                                             | Tecnología                |
 | ------------------- | ---------------------------------------------------------- | ------------------------- |
-| Aplicación web      | Servir las rutas `/` y `/health` sobre HTTP.               | Python 3.11 + Flask       |
+| Aplicación web      | Servir las rutas `/` y `/health` sobre HTTP.               | Python 3.14 + Flask       |
 | Contenedor          | Empaquetar la app y sus dependencias de forma reproducible. | Docker + Docker Compose   |
 | Pipeline CI/CD      | Ejecutar tests y desplegar a EC2 en cada push a `main`.    | GitHub Actions            |
 | Infraestructura     | Provisionar la instancia EC2, Security Group y Key Pair.   | Terraform                 |

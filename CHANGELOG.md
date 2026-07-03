@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Changed
+
+- Actualiza la imagen base de Docker de Python 3.11-slim a 3.14-slim (Dependabot).
+- Actualiza `actions/checkout` de v3 a v7 y `actions/setup-python` de v4 a v6 (Dependabot).
+- Alinea la versión de Python del CI y de la documentación a 3.14.
+
 ## [1.0.0] - 2026-07-02
 
 ### Added
