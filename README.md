@@ -1,8 +1,127 @@
-# 🚀 Proyecto DevOps Python – CI/CD con GitHub Actions + AWS + Terraform
+# Proyecto Python DevOps
+
+Ejemplo educativo de un flujo CI/CD de punta a punta: aplicación **Python + Flask** contenerizada con **Docker**, infraestructura gestionada con **Terraform** y despliegue automático a **AWS EC2** mediante **GitHub Actions**.
+
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+![Python](https://img.shields.io/badge/python-3.11-blue)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+## Tabla de Contenidos
+
+- [Descripción](#descripción)
+- [Características](#características)
+- [Requisitos Previos](#requisitos-previos)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Uso](#uso)
+- [Arquitectura](#arquitectura)
+- [Stack Tecnológico](#stack-tecnológico)
+- [Infraestructura con Terraform](#infraestructura-con-terraform)
+- [Despliegue](#despliegue)
+- [Testing](#testing)
+- [Contribución](#contribución)
+- [Documentación](#documentación)
+- [Roadmap](#roadmap)
+- [Versionado](#versionado)
+- [Autores](#autores)
+- [Licencia](#licencia)
+- [Apóyanos](#apóyanos)
+
+## Descripción
 
 Este proyecto educativo demuestra cómo implementar un flujo de integración y entrega continua (CI/CD) usando GitHub Actions y despliegue automático a una instancia EC2 en AWS. La aplicación está desarrollada en **Python + Flask**, se ejecuta en contenedores Docker, y su infraestructura es gestionada con **Terraform**.
 
-## 📦 Tecnologías utilizadas
+### Flujo CI/CD
+
+```mermaid
+graph TD
+  A[Push a develop] --> B[Test con Pytest]
+  B --> C{Todo OK?}
+  C -- Sí --> D[Merge a main]
+  D --> E[GitHub Actions: ssh a EC2]
+  E --> F[git pull + docker-compose]
+  C -- No --> G[Pipeline fallida]
+```
+
+## Características
+
+- ✅ API Flask con rutas `/` y `/health`.
+- ✅ Tests automatizados con Pytest.
+- ✅ Contenerización con Docker y Docker Compose.
+- ✅ Infraestructura como código con Terraform (EC2, Security Group, Key Pair).
+- ✅ CI/CD con GitHub Actions: tests en cada push/PR y deploy automático a EC2.
+- 📋 Linter/formateador y cobertura de tests (ver [roadmap](docs/product/roadmap.md)).
+
+## Requisitos Previos
+
+Antes de comenzar, asegúrate de tener instalado:
+
+- **Python**: v3.11 o superior
+- **Docker** y **Docker Compose**
+- **Terraform**: v1.x o superior (para la infraestructura)
+- **Cuenta de AWS** y un par de claves SSH (para el despliegue)
+
+## Instalación
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/brayandiazc/proyecto-python-devops.git
+cd proyecto-python-devops
+```
+
+### 2. Instalar dependencias
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Configurar variables de entorno
+
+```bash
+cp .env.example .env
+# Edita .env si necesitas cambiar el puerto
+```
+
+## Configuración
+
+Las variables se documentan en [`.env.example`](.env.example). La aplicación es
+mínima y escucha en el puerto `5000` por defecto. Los secretos de despliegue
+(`EC2_HOST`, `EC2_USER`, `EC2_KEY_BASE64`) se configuran como **GitHub Actions
+Secrets**, no en local.
+
+> Nunca subas tu archivo `.env` ni claves privadas al repositorio. Ver [SECURITY.md](SECURITY.md) y [`docs/conventions/secrets.md`](docs/conventions/secrets.md).
+
+## Uso
+
+### Desarrollo local
+
+```bash
+python app/app.py
+# La aplicación quedará disponible en http://localhost:5000
+```
+
+### Con Docker
+
+```bash
+docker-compose up -d --build
+```
+
+### Ejemplos
+
+```bash
+curl http://localhost:5000/
+curl http://localhost:5000/health
+```
+
+Contrato completo de la API en [`docs/architecture/api.md`](docs/architecture/api.md).
+
+## Arquitectura
+
+Resumen de cómo está construido el sistema y del flujo CI/CD en
+[`docs/architecture/architecture.md`](docs/architecture/architecture.md).
+
+## Stack Tecnológico
 
 | Capa               | Herramienta                    |
 | ------------------ | ------------------------------ |
@@ -14,33 +133,11 @@ Este proyecto educativo demuestra cómo implementar un flujo de integración y e
 | Infraestructura    | Terraform (EC2, SG, Key Pair)  |
 | Despliegue         | SSH desde GitHub Actions a EC2 |
 
-## 📁 Estructura del proyecto
+Inventario completo en [`docs/architecture/stack.md`](docs/architecture/stack.md).
 
-```bash
-proyecto-python-devops/
-├── app/                  # Código de la aplicación Flask
-│   ├── __init__.py
-│   └── app.py
-├── tests/                # Tests con pytest
-│   └── test_app.py
-├── terraform/            # Infraestructura con Terraform
-│   ├── main.tf
-│   ├── variables.tf
-│   ├── outputs.tf
-├── .github/
-│   └── workflows/
-│       └── deploy.yml    # Workflow de GitHub Actions
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-└── README.md
-```
+## Infraestructura con Terraform
 
-## 🧱 Infraestructura con Terraform (EC2)
-
-### 1. Configura el archivo `variables.tf`
-
-Asegúrate de definir:
+### 1. Configura las variables (`terraform/variables.tf`)
 
 ```hcl
 variable "public_key_path" {
@@ -58,124 +155,94 @@ variable "my_ip" {
 cd terraform
 terraform init
 terraform apply
+terraform output   # obtiene la IP pública de la EC2
 ```
 
-### 3. Obtén la IP de tu EC2
+### 3. Configura la instancia EC2
 
-```bash
-terraform output
-```
-
-## 🖥️ Configuración inicial de la instancia EC2
-
-Conéctate a la instancia:
+Conéctate e instala Docker, Docker Compose y Git:
 
 ```bash
 ssh -i ~/.ssh/id_rsa ubuntu@<IP_PUBLICA>
-```
 
-### 🔧 Instalar Docker, Git y Docker Compose
-
-```bash
-# Actualizar el sistema
 sudo apt update && sudo apt upgrade -y
-
-# Instalar Docker
-sudo apt install -y docker.io
-
-# Habilitar y arrancar Docker
-sudo systemctl enable docker
-sudo systemctl start docker
-
-# Agregar tu usuario a docker (requiere reiniciar sesión)
-sudo usermod -aG docker $USER
-
-# Instalar Docker Compose
-sudo apt install -y docker-compose
-
-# Instalar Git
-sudo apt install -y git
+sudo apt install -y docker.io docker-compose git
+sudo systemctl enable docker && sudo systemctl start docker
+sudo usermod -aG docker $USER   # requiere reiniciar sesión
 ```
 
-### 🔁 Salir y volver a entrar para aplicar cambios de grupo
+## Despliegue
 
-```bash
-exit
-ssh -i ~/.ssh/id_rsa ubuntu@<IP_PUBLICA>
-```
+El despliegue es **automático** en cada push a `main` (tras pasar los tests).
+Procedimiento detallado, rollback y health checks en
+[`docs/conventions/deploy.md`](docs/conventions/deploy.md).
 
-## 📥 Clonar el repositorio y probar manualmente
+### Secrets de GitHub
 
-```bash
-git clone https://github.com/TU_USUARIO/proyecto-python-devops.git
-cd proyecto-python-devops
+En `Settings > Secrets and variables > Actions` agrega:
 
-docker-compose up -d --build
-```
+| Nombre           | Valor                                                                    |
+| ---------------- | ------------------------------------------------------------------------ |
+| `EC2_HOST`       | IP pública de la instancia EC2 (output de Terraform).                    |
+| `EC2_USER`       | Usuario SSH, por ejemplo: `ubuntu`.                                      |
+| `EC2_KEY_BASE64` | Clave privada SSH en base64: `base64 -i ~/.ssh/id_rsa` (una sola línea). |
 
-Verifica desde la instancia:
-
-```bash
-curl http://localhost:5000/health
-```
-
-Y desde tu navegador local:
-
-```bash
-http://<IP_PUBLICA>:5000/health
-```
-
-## 🔐 Configuración de Secrets en GitHub
-
-Ve a `Settings > Secrets > Actions` en tu repositorio y agrega:
-
-| Nombre           | Valor (secreto)                                                                    |
-| ---------------- | ---------------------------------------------------------------------------------- |
-| `EC2_HOST`       | IP pública de la instancia EC2 (obtenida desde Terraform)                          |
-| `EC2_USER`       | Usuario SSH, por ejemplo: `ubuntu`                                                 |
-| `EC2_KEY_BASE64` | Clave privada SSH codificada en base64: `base64 -i ~/.ssh/id_rsa` (una sola línea) |
-
-## ▶️ ¿Cómo funciona el flujo CI/CD?
-
-Cada vez que haces `push` a la rama `main`:
-
-- Se ejecutan los tests en GitHub Actions
-- Si todo pasa, GitHub se conecta por SSH a tu EC2 y despliega
-
-## 🧪 Ejecutar tests localmente
+## Testing
 
 ```bash
 pytest
 ```
 
-## 📈 Diagrama del flujo CI/CD
+Convenciones de testing en [`docs/conventions/testing.md`](docs/conventions/testing.md).
 
-```mermaid
-graph TD
-  A[Push a develop] --> B[Test con Pytest]
-  B --> C{Todo OK?}
-  C -- Sí --> D[Merge a main]
-  D --> E[GitHub Actions: ssh a EC2]
-  E --> F[git pull + docker-compose]
-  C -- No --> G[Pipeline fallida]
-```
+## Contribución
 
-## 🎓 ¿Qué aprende el estudiante?
+Lee la [Guía de Contribución](CONTRIBUTING.md) para conocer el flujo de trabajo (Git Flow), los estándares de código, el formato de commits (Conventional Commits) y el proceso de Pull Requests. Respeta también el [Código de Conducta](CODE_OF_CONDUCT.md).
 
-- Cómo usar Git, Docker, Terraform, Python y GitHub Actions de forma conjunta
-- Cómo automatizar pruebas y despliegues
-- Cómo montar una arquitectura mínima CI/CD moderna
-- Cómo gestionar claves SSH, variables de entorno y flujos de trabajo seguros
+## Documentación
 
-## Autor
+Toda la documentación vive en [`docs/`](docs/README.md):
 
-- [Brayan Diaz C](https://github.com/brayandiazc)
-- [Jplazadelosreyes](https://github.com/Jplazadelosreyes)
+| Documento                                                                | Responde a                     |
+| ------------------------------------------------------------------------ | ------------------------------ |
+| [`docs/architecture/architecture.md`](docs/architecture/architecture.md) | ¿Cómo está construido?         |
+| [`docs/architecture/stack.md`](docs/architecture/stack.md)               | ¿Con qué tecnologías?          |
+| [`docs/architecture/api.md`](docs/architecture/api.md)                   | ¿Qué endpoints expone?         |
+| [`docs/conventions/`](docs/conventions/README.md)                        | ¿Cómo trabajamos en este repo? |
+| [`docs/decisions/`](docs/decisions/README.md)                            | ¿Por qué cada decisión?        |
+| [`docs/product/roadmap.md`](docs/product/roadmap.md)                     | ¿Hacia dónde va?               |
+| [`docs/glossary.md`](docs/glossary.md)                                   | ¿Qué significa cada término?   |
+
+## Roadmap
+
+Visión y próximos pasos en [`docs/product/roadmap.md`](docs/product/roadmap.md).
+
+## ¿Qué aprende el estudiante?
+
+- Cómo usar Git, Docker, Terraform, Python y GitHub Actions de forma conjunta.
+- Cómo automatizar pruebas y despliegues.
+- Cómo montar una arquitectura mínima CI/CD moderna.
+- Cómo gestionar claves SSH, variables de entorno y flujos de trabajo seguros.
+
+## Versionado
+
+Usamos [Git](https://git-scm.com) para el control de versiones y seguimos [Semantic Versioning](https://semver.org/). Consulta las [etiquetas](https://github.com/brayandiazc/proyecto-python-devops/tags) para ver las versiones disponibles y el [CHANGELOG](CHANGELOG.md).
+
+## Autores
+
+- **Brayan Diaz C** — [@brayandiazc](https://github.com/brayandiazc)
+- **Jplazadelosreyes** — [@Jplazadelosreyes](https://github.com/Jplazadelosreyes)
 
 ## Licencia
 
-Este proyecto está licenciado bajo la Licencia MIT - consulta el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la licencia [MIT](LICENSE).
+
+## Apóyanos
+
+Si este proyecto te resulta útil y quieres apoyar su desarrollo:
+
+- [GitHub Sponsors](https://github.com/sponsors/brayandiazc)
 
 ---
 
-⌨️ con ❤️ por [Brayan Diaz C](https://github.com/brayandiazc) y [Jplazadelosreyes](https://github.com/Jplazadelosreyes)
+⌨️ con ❤️ por [@brayandiazc](https://github.com/brayandiazc) y [@Jplazadelosreyes](https://github.com/Jplazadelosreyes)

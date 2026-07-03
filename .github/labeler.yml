@@ -1,0 +1,53 @@
+# Auto-etiquetado de Pull Requests según los archivos modificados.
+# Reglas ajustadas a la estructura de este proyecto.
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - "**/*.md"
+      - "docs/**/*"
+      - ".github/ISSUE_TEMPLATE/**/*"
+      - ".github/PULL_REQUEST_TEMPLATE.md"
+
+backend:
+  - changed-files:
+    - any-glob-to-any-file:
+      - "app/**/*"
+
+infra:
+  - changed-files:
+    - any-glob-to-any-file:
+      - "terraform/**/*"
+      - "**/*.tf"
+
+testing:
+  - changed-files:
+    - any-glob-to-any-file:
+      - "tests/**/*"
+      - "**/*_test.*"
+      - "**/test_*.py"
+
+config:
+  - changed-files:
+    - any-glob-to-any-file:
+      - ".env*"
+      - ".editorconfig"
+
+ci-cd:
+  - changed-files:
+    - any-glob-to-any-file:
+      - ".github/workflows/**/*"
+      - ".github/dependabot.yml"
+      - "Dockerfile*"
+      - "docker-compose*"
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - "requirements*.txt"
+      - "pyproject.toml"
+
+github:
+  - changed-files:
+    - any-glob-to-any-file:
+      - ".github/**/*"
